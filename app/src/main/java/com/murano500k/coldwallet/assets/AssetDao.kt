@@ -9,7 +9,7 @@ interface AssetDao {
     @Query("SELECT * from asset_table ORDER BY currency ASC")
     fun getAssets(): LiveData<List<Asset>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(asset: Asset)
 
     @Query("DELETE FROM asset_table")

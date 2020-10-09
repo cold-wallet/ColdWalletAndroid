@@ -10,8 +10,7 @@ import com.murano500k.coldwallet.assets.AssetRoomDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AssetViewModel(application: Application) : AndroidViewModel(application) ,
-    AssetListAdapter.OnEditListener {
+class AssetViewModel(application: Application) : AndroidViewModel(application)  {
 
     private val repository: AssetRepository
     // Using LiveData and caching what getAssets returns has several benefits:
@@ -41,11 +40,4 @@ class AssetViewModel(application: Application) : AndroidViewModel(application) ,
         repository.update(asset)
     }
 
-    override fun deleteButtonClicked(asset: Asset) {
-        delete(asset)
-    }
-
-    override fun onValueChanged(asset: Asset) {
-        update(asset)
-    }
 }

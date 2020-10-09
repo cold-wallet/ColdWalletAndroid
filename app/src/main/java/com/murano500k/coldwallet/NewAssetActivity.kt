@@ -15,9 +15,11 @@ import java.util.*
 class NewAssetActivity : AppCompatActivity() {
 
     companion object {
-        const val EXTRA_REPLY = "com.murano500k.coldwallet.REPLY"
+        const val EXTRA_ASSET = "com.murano500k.coldwallet.REPLY"
     }
     private var isCrypto = false
+    private lateinit var currenciesList: List<String>
+    private lateinit var mAsset: Asset
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,24 +38,38 @@ class NewAssetActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(edit_amount.text)) {
                 setResult(Activity.RESULT_CANCELED, replyIntent)
             } else {
-                val asset = parseAsset()
-
-                replyIntent.putExtra(EXTRA_REPLY, asset)
+                replyIntent.putExtra(EXTRA_ASSET, parseAsset())
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             finish()
         }
         updateCurrenciesList()
-        initSwtich()
+        initAsset()
+        initValues()
     }
 
-    private fun initSwtich() {
-
+    private fun initAsset() {
+        if(intent.getParcelableExtra<Asset>(EXTRA_ASSET)!=null) {
+            mAsset = intent.getParcelableExtra<Asset>(EXTRA_ASSET)!!
+        }else{
+            mAsset = Asset(0, CURRENCY_TYPE.FIAT.ordinal, 0.0f, "USD","USD amount", "my USD amount" )
+        }
     }
+
+
+    private fun initValues() {
+        mAsset
+        switchFiatCrypto.isChecked = (mAsset.type == CURRENCY_TYPE.CRYPTO.ordinal)
+        spinnerCurrencies.setSelection(currenciesList.indexOf(mAsset.currency))
+        edit_name.setText(mAsset.name)
+        edit_description.setText(mAsset.description)
+        edit_amount.setText(mAsset.amount.toString())
+    }
+
 
     private fun updateCurrenciesList() {
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val currenciesList: List<String>
+
 
         if(isCrypto){
             currenciesList = getFiatCurrencyCodes()
@@ -81,8 +97,9 @@ class NewAssetActivity : AppCompatActivity() {
         //val currency = edit_currency.text.toString()
         val name = edit_name.text.toString()
         val description = edit_description.text.toString()
+        val id = mAsset.id
 
-        return Asset(0, type, amount, currency, name, description)
+        return Asset(id, type, amount, currency, name, description)
     }
 
 

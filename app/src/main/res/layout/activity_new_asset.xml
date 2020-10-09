@@ -51,11 +51,11 @@
         android:id="@+id/edit_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/min_height"
+        android:layout_margin="@dimen/big_padding"
         android:fontFamily="sans-serif-light"
         android:hint="@string/hint_amount"
-        android:inputType="number"
-        android:layout_margin="@dimen/big_padding"
+        android:inputType="numberDecimal"
+        android:minHeight="@dimen/min_height"
         android:textSize="18sp" />
     <EditText
         android:id="@+id/edit_name"

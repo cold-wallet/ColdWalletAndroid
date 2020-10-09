@@ -67,6 +67,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
 
-    compile group: 'io.github.cross-rates', name: 'cross-rates-client', version: '0.0.6'
+    implementation 'com.github.roadmaptravel:Curry:0.1.5'
+
 
 }
