@@ -1,17 +1,22 @@
 package com.murano500k.coldwallet
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.murano500k.coldwallet.assets.Asset
 
 
 class AssetListAdapter internal constructor(
-    context: Context
+    private val context: Context,
+    private val listener: OnEditListener
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -22,6 +27,7 @@ class AssetListAdapter internal constructor(
         val textName: TextView = itemView.findViewById(R.id.textName)
         val textDescription: TextView = itemView.findViewById(R.id.textDescription)
         var editTextAmount: EditText = itemView.findViewById(R.id.editTextAmount)
+        var buttonRemove: ImageButton = itemView.findViewById(R.id.buttonRemove)
 
     }
 
@@ -35,7 +41,22 @@ class AssetListAdapter internal constructor(
         holder.textCurrency.text = current.currency
         holder.textName.text = current.name
         holder.textDescription.text = current.description
+
         holder.editTextAmount.setText(current.amount.toString())
+        holder.buttonRemove.setOnClickListener {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Are you sure you want to delete ${current.name}?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    listener.deleteButtonClicked(current)
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
 
     internal fun setAssets(assets: List<Asset>) {
@@ -44,4 +65,10 @@ class AssetListAdapter internal constructor(
     }
 
     override fun getItemCount() = assets.size
+
+    interface OnEditListener {
+        fun deleteButtonClicked(asset: Asset)
+        fun onValueChanged(asset: Asset)
+
+    }
 }

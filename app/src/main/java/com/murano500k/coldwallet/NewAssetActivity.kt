@@ -14,6 +14,9 @@ import java.util.*
 
 class NewAssetActivity : AppCompatActivity() {
 
+    companion object {
+        const val EXTRA_REPLY = "com.murano500k.coldwallet.REPLY"
+    }
     private var isCrypto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,9 +85,6 @@ class NewAssetActivity : AppCompatActivity() {
         return Asset(0, type, amount, currency, name, description)
     }
 
-    companion object {
-        const val EXTRA_REPLY = "com.murano500k.coldwallet.REPLY"
-    }
 
     private fun getFiatCurrencyCodes(): List<String>{
         return Currency.getAvailableCurrencies().toList()

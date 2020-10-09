@@ -11,4 +11,11 @@ class AssetRepository(private val assetDao: AssetDao) {
     suspend fun insert(asset: Asset) {
         assetDao.insert(asset)
     }
+    suspend fun delete(asset: Asset) {
+        assetDao.delete(asset)
+    }
+    suspend fun update(asset: Asset) {
+        assetDao.update(asset)
+    }
+
 }
