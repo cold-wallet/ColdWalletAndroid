@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="fiat_currency_codes">
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>UAH</item>
+        <item>PLN</item>
+        <item>RUB</item>
+    </string-array>
+
+    <string-array name="fiat_currency_names">
+        <item>US Dollar</item>
+        <item>Euro</item>
+        <item>Pound sterling</item>
+        <item>Ukrainian hryvnya</item>
+        <item>Polish zloty</item>
+        <item>Russian ruble</item>
+    </string-array>
+
+    <string-array name="fiat_currency_icons">
+        <item>&#x24;</item>
+        <item>&#x20ac;</item>
+        <item>&#xA3;</item>
+        <item>&#8372;</item>
+        <item>&#122;&#322;</item>
+        <item>&#x20BD;</item>
+    </string-array>
+</resources>

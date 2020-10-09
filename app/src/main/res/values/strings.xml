@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ColdWalletAndroid</string>
+
+    <string name="hint_type">Fiat - 0, Crypto - 1</string>
+    <string name="hint_currency">Currency: USD, EUR...</string>
+    <string name="hint_amount">Amount: 100.6</string>
+    <string name="hint_name">Name: USD amount</string>
+    <string name="hint_descrption">Description: USD amount</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">not saved because it is empty.</string>
+    <string name="fiat">Fiat</string>
+    <string name="crypto">Crypto</string>
 </resources>
