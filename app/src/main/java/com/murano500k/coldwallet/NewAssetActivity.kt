@@ -107,4 +107,8 @@ class NewAssetActivity : AppCompatActivity() {
         return Currency.getAvailableCurrencies().toList()
             .map { (it.currencyCode)}.sortedBy { it }
     }
+    private fun getFiatCurrencyCodes2(): List<String>{
+        return Currency.getAvailableCurrencies().toList()
+            .map { (it.currencyCode)}.sortedBy { it }
+    }
 }

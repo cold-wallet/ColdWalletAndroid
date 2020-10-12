@@ -68,6 +68,7 @@ dependencies {
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
 
     implementation 'com.github.roadmaptravel:Curry:0.1.5'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 
 }

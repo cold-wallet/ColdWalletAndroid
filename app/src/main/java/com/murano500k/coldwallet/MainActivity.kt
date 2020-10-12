@@ -31,11 +31,6 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
-
-
         button_add.setOnClickListener {
             val intent = Intent(this@MainActivity, NewAssetActivity::class.java)
             startActivityForResult(intent, newAssetRequestCode)
@@ -51,11 +46,6 @@ class MainActivity : AppCompatActivity(),
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         assetViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
-            Log.w(TAG, "assets changed begin" );
-            assets.forEach{
-                Log.w(TAG, "assets changed $it" );
-            }
-            Log.w(TAG, "assets changed end" );
             assets?.let { adapter.setAssets(it) }
         })
 
