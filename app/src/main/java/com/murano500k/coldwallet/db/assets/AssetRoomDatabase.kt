@@ -1,18 +1,21 @@
-package com.murano500k.coldwallet.assets
+package com.murano500k.coldwallet.db.assets
 
 import android.content.Context
-import androidx.room.CoroutinesRoom
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.murano500k.coldwallet.database.CryptoCode
+import com.murano500k.coldwallet.database.CryptoCodeDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(Asset::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Asset::class, CryptoCode::class), version = 2, exportSchema = false)
 public abstract class AssetRoomDatabase : RoomDatabase() {
 
     abstract fun assetDao(): AssetDao
+
+    abstract fun cryptoCodeDao(): CryptoCodeDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -32,6 +35,7 @@ public abstract class AssetRoomDatabase : RoomDatabase() {
                     "word_database"
                 )
                     .addCallback(AssetDatabaseCallback(scope))
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 return instance
@@ -66,5 +70,6 @@ public abstract class AssetRoomDatabase : RoomDatabase() {
 
             // TODO: Add your own words!
         }
+
     }
 }

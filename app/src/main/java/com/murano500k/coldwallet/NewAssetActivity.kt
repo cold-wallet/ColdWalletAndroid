@@ -4,26 +4,38 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.appcompat.app.AppCompatActivity
-import com.murano500k.coldwallet.assets.Asset
+import androidx.lifecycle.ViewModelProvider
+import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.net.CryptoViewModel
+import com.murano500k.coldwallet.net.utils.Status
 import kotlinx.android.synthetic.main.activity_new_asset.*
 import java.util.*
 
 
 class NewAssetActivity : AppCompatActivity() {
 
+
     companion object {
+        const val TAG = "NewAssetActivity"
         const val EXTRA_ASSET = "com.murano500k.coldwallet.REPLY"
     }
     private var isCrypto = false
     private lateinit var currenciesList: List<String>
     private lateinit var mAsset: Asset
 
+    private lateinit var cryptoViewModel: CryptoViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_asset)
+        setupViewModel()
+        setupObserver()
 
 
         switchFiatCrypto.setOnCheckedChangeListener { compoundButton: CompoundButton, isChecked: Boolean ->
@@ -48,6 +60,33 @@ class NewAssetActivity : AppCompatActivity() {
         initValues()
     }
 
+    private fun setupObserver() {
+
+        cryptoViewModel.getCryptoCodes().observe(this, androidx.lifecycle.Observer { resource ->
+            when(resource.status){
+                Status.SUCCESS -> {
+                    resource.data?.let {
+                        currenciesList = it
+                        setSpinnerItems(it)
+                    }
+                }
+                Status.LOADING -> {
+                    Log.w(TAG, "LOADING" );
+                }
+                Status.ERROR -> {
+                    Log.e(TAG, "ERROR ${resource.message}" );
+                }
+
+            }
+        })
+
+    }
+
+    private fun setupViewModel() {
+        cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
+    }
+
+
     private fun initAsset() {
         if(intent.getParcelableExtra<Asset>(EXTRA_ASSET)!=null) {
             mAsset = intent.getParcelableExtra<Asset>(EXTRA_ASSET)!!
@@ -58,7 +97,6 @@ class NewAssetActivity : AppCompatActivity() {
 
 
     private fun initValues() {
-        mAsset
         switchFiatCrypto.isChecked = (mAsset.type == CURRENCY_TYPE.CRYPTO.ordinal)
         spinnerCurrencies.setSelection(currenciesList.indexOf(mAsset.currency))
         edit_name.setText(mAsset.name)
@@ -72,15 +110,33 @@ class NewAssetActivity : AppCompatActivity() {
 
 
         if(isCrypto){
-            currenciesList = getFiatCurrencyCodes()
+            setupObserver()
         } else {
-            currenciesList = getFiatCurrencyCodes()
+            currenciesList =getFiatCurrencyCodes()
+            setSpinnerItems(currenciesList)
         }
 
+
+    }
+    private fun setSpinnerItems( currenciesList: List<String>){
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currenciesList )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         edit_currency.setAdapter(adapter)
         spinnerCurrencies.adapter = adapter
+
+        spinnerCurrencies.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val name = adapter.getItem(position)
+                Log.w(TAG, "onItemSelected: $name amount" );
+                edit_name.setText("$name amount")
+                edit_name.selectAll()
+            }
+
+        }
     }
 
 
@@ -104,10 +160,6 @@ class NewAssetActivity : AppCompatActivity() {
 
 
     private fun getFiatCurrencyCodes(): List<String>{
-        return Currency.getAvailableCurrencies().toList()
-            .map { (it.currencyCode)}.sortedBy { it }
-    }
-    private fun getFiatCurrencyCodes2(): List<String>{
         return Currency.getAvailableCurrencies().toList()
             .map { (it.currencyCode)}.sortedBy { it }
     }

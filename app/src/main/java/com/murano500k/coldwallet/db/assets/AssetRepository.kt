@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet.assets
+package com.murano500k.coldwallet.db.assets
 
 import androidx.lifecycle.LiveData
 

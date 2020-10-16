@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ColdWalletAndroid</string>
 
-    <string name="hint_type">Fiat - 0, Crypto - 1</string>
+    <string name="hint_type">Fiat/Crypto</string>
     <string name="hint_currency">Currency: USD, EUR...</string>
     <string name="hint_amount">Amount: 100.6</string>
     <string name="hint_name">Name: USD amount</string>

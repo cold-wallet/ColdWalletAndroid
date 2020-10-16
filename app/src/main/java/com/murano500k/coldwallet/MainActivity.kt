@@ -2,18 +2,16 @@ package com.murano500k.coldwallet
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.murano500k.coldwallet.Constants.EXTRA_CURRENCY
-import com.murano500k.coldwallet.assets.Asset
+import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.net.CryptoActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity(),
     AssetListAdapter.OnEditListener {
@@ -37,6 +35,10 @@ class MainActivity : AppCompatActivity(),
         }
         button_rates.setOnClickListener {
             val intent = Intent(this@MainActivity, RatesActivity::class.java)
+            startActivity(intent)
+        }
+        button_crypto.setOnClickListener {
+            val intent = Intent(this@MainActivity, CryptoActivity::class.java)
             startActivity(intent)
         }
         assetViewModel = ViewModelProvider(this).get(AssetViewModel::class.java)

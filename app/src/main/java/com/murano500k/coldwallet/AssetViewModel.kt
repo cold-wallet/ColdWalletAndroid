@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.murano500k.coldwallet.assets.Asset
-import com.murano500k.coldwallet.assets.AssetRepository
-import com.murano500k.coldwallet.assets.AssetRoomDatabase
+import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.db.assets.AssetRepository
+import com.murano500k.coldwallet.db.assets.AssetRoomDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

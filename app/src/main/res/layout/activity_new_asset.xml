@@ -9,12 +9,14 @@
 
     <Switch
         android:id="@+id/switchFiatCrypto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
         android:layout_margin="16dp"
+        android:showText="true"
+        android:text="@string/hint_type"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textOff="@string/fiat"
-        android:textOn="@string/crypto"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textOn="@string/crypto" />
 
     <Spinner
         android:id="@+id/spinnerCurrencies"
