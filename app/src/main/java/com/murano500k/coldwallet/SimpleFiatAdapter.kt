@@ -1,11 +1,9 @@
-package com.murano500k.coldwallet.db.assets
+package com.murano500k.coldwallet
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.murano500k.coldwallet.R
-import com.murano500k.coldwallet.inflate
 import java.util.*
 
 class SimpleFiatAdapter(private var items: List<Currency>, private var listener: ItemClickListerner) : RecyclerView.Adapter<SimpleFiatAdapter.CryptoViewHolder>() {

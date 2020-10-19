@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.database.Asset
+import com.murano500k.coldwallet.database.MyRoomDatabase
 import com.murano500k.coldwallet.db.assets.AssetRepository
-import com.murano500k.coldwallet.db.assets.AssetRoomDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -20,7 +20,7 @@ class AssetViewModel(application: Application) : AndroidViewModel(application)  
     val allAssets: LiveData<List<Asset>>
 
     init {
-        val assetsDao = AssetRoomDatabase.getDatabase(application, viewModelScope).assetDao()
+        val assetsDao = MyRoomDatabase.getDatabase(application, viewModelScope).assetDao()
         repository = AssetRepository(assetsDao)
         allAssets = repository.allAssets
     }

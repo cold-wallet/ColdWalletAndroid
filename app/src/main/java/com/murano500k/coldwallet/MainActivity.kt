@@ -4,22 +4,33 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.database.Asset
 import com.murano500k.coldwallet.net.CryptoActivity
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+
+@AndroidEntryPoint
+@ActivityScoped
 class MainActivity : AppCompatActivity(),
     AssetListAdapter.OnEditListener {
 
     private lateinit var assetViewModel: AssetViewModel
     private val newAssetRequestCode = 1
     private val editAssetRequestCode = 2
-
+    private val mainViewModel: MainViewModel by viewModels()
 
     companion object {
         const val REQUEST_ADD_CURRENCY = 13
@@ -29,6 +40,52 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initButtons()
+        assetViewModel = ViewModelProvider(this).get(AssetViewModel::class.java)
+        initListView()
+        fetchData()
+
+
+    }
+
+    private fun fetchData() {
+        setButtonsVisible(false)
+        lifecycleScope.launch(Dispatchers.IO){
+            try{
+                mainViewModel.initData()
+                withContext(Dispatchers.Main){
+                    Toast.makeText(applicationContext, "data loaded", Toast.LENGTH_SHORT).show();
+                    setButtonsVisible(true)
+                }
+
+            }catch (e:Exception){
+                e.printStackTrace()
+                withContext(Dispatchers.Main){
+                    Toast.makeText(applicationContext, "data load error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private fun setButtonsVisible(isVisible : Boolean){
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
+        button_add.visibility = visibility
+        button_crypto.visibility = visibility
+        button_rates.visibility = visibility
+    }
+
+    private fun initListView(){
+        val recyclerView = findViewById<RecyclerView>(R.id.list_assets)
+        val adapter = AssetListAdapter(this, this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        assetViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
+            assets?.let { adapter.setAssets(it) }
+        })
+
+    }
+
+    private fun initButtons(){
         button_add.setOnClickListener {
             val intent = Intent(this@MainActivity, NewAssetActivity::class.java)
             startActivityForResult(intent, newAssetRequestCode)
@@ -41,16 +98,6 @@ class MainActivity : AppCompatActivity(),
             val intent = Intent(this@MainActivity, CryptoActivity::class.java)
             startActivity(intent)
         }
-        assetViewModel = ViewModelProvider(this).get(AssetViewModel::class.java)
-
-        val recyclerView = findViewById<RecyclerView>(R.id.list_assets)
-        val adapter = AssetListAdapter(this, this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        assetViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
-            assets?.let { adapter.setAssets(it) }
-        })
-
     }
 
 

@@ -5,6 +5,9 @@ import com.murano500k.coldwallet.net.model.PriceItem
 import retrofit2.http.GET
 
 interface ApiService {
+    companion object {
+        const val BASE_URL = "https://api.binance.com/"
+    }
 
     @GET("api/v3/ticker/price")
     suspend fun getAllPrices(): List<PriceItem>

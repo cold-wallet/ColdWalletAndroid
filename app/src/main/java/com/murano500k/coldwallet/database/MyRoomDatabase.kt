@@ -1,29 +1,33 @@
-package com.murano500k.coldwallet.db.assets
+package com.murano500k.coldwallet.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.murano500k.coldwallet.database.CryptoCode
-import com.murano500k.coldwallet.database.CryptoCodeDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = arrayOf(Asset::class, CryptoCode::class), version = 2, exportSchema = false)
-public abstract class AssetRoomDatabase : RoomDatabase() {
+@Database(entities = arrayOf(
+    Asset::class,
+    CryptoCode::class,
+    CryptoPricePair::class
+), version = 3, exportSchema = false)
+public abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun assetDao(): AssetDao
 
     abstract fun cryptoCodeDao(): CryptoCodeDao
 
+    abstract fun cryptoPricePairDao(): CryptoPricePairDao
+
     companion object {
         // Singleton prevents multiple instances of database opening at the
         // same time.
         @Volatile
-        private var INSTANCE: AssetRoomDatabase? = null
+        private var INSTANCE: MyRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): AssetRoomDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope): MyRoomDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
@@ -31,10 +35,27 @@ public abstract class AssetRoomDatabase : RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AssetRoomDatabase::class.java,
+                    MyRoomDatabase::class.java,
                     "word_database"
                 )
                     .addCallback(AssetDatabaseCallback(scope))
+                    .fallbackToDestructiveMigration()
+                    .build()
+                INSTANCE = instance
+                return instance
+            }
+        }
+        fun getDatabase(context: Context): MyRoomDatabase {
+            val tempInstance = INSTANCE
+            if (tempInstance != null) {
+                return tempInstance
+            }
+            synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    MyRoomDatabase::class.java,
+                    "word_database"
+                )
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

@@ -6,12 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
-import com.murano500k.coldwallet.db.assets.Asset
+import com.murano500k.coldwallet.database.Asset
 
 
 class AssetListAdapter internal constructor(

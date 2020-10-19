@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet.db.assets
+package com.murano500k.coldwallet.database
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

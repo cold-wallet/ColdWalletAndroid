@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet.db.assets
+package com.murano500k.coldwallet.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -7,7 +7,10 @@ import androidx.room.*
 interface AssetDao {
 
     @Query("SELECT * from asset_table ORDER BY currency ASC")
-    fun getAssets(): LiveData<List<Asset>>
+    fun getLiveAssets(): LiveData<List<Asset>>
+
+    @Query("SELECT * from asset_table ORDER BY currency ASC")
+    fun getAssets(): List<Asset>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(asset: Asset)

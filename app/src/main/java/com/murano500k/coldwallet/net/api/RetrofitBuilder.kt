@@ -11,7 +11,6 @@ object RetrofitBuilder {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
-
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

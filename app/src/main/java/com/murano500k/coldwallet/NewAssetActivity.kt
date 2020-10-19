@@ -9,34 +9,41 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.murano500k.coldwallet.db.assets.Asset
+import androidx.lifecycle.lifecycleScope
+import com.murano500k.coldwallet.database.Asset
 import com.murano500k.coldwallet.net.CryptoViewModel
-import com.murano500k.coldwallet.net.utils.Status
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.android.synthetic.main.activity_new_asset.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
+@AndroidEntryPoint
+@ActivityScoped
 class NewAssetActivity : AppCompatActivity() {
-
 
     companion object {
         const val TAG = "NewAssetActivity"
         const val EXTRA_ASSET = "com.murano500k.coldwallet.REPLY"
     }
-    private var isCrypto = false
-    private lateinit var currenciesList: List<String>
+    private var isCrypto = true
+    private var currenciesList: List<String> =ArrayList()
     private lateinit var mAsset: Asset
 
     private lateinit var cryptoViewModel: CryptoViewModel
+    private val newAssetViewModel: NewAssetViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_asset)
         setupViewModel()
-        setupObserver()
-
 
         switchFiatCrypto.setOnCheckedChangeListener { compoundButton: CompoundButton, isChecked: Boolean ->
             if (isCrypto != isChecked) {
@@ -60,28 +67,6 @@ class NewAssetActivity : AppCompatActivity() {
         initValues()
     }
 
-    private fun setupObserver() {
-
-        cryptoViewModel.getCryptoCodes().observe(this, androidx.lifecycle.Observer { resource ->
-            when(resource.status){
-                Status.SUCCESS -> {
-                    resource.data?.let {
-                        currenciesList = it
-                        setSpinnerItems(it)
-                    }
-                }
-                Status.LOADING -> {
-                    Log.w(TAG, "LOADING" );
-                }
-                Status.ERROR -> {
-                    Log.e(TAG, "ERROR ${resource.message}" );
-                }
-
-            }
-        })
-
-    }
-
     private fun setupViewModel() {
         cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
     }
@@ -98,7 +83,10 @@ class NewAssetActivity : AppCompatActivity() {
 
     private fun initValues() {
         switchFiatCrypto.isChecked = (mAsset.type == CURRENCY_TYPE.CRYPTO.ordinal)
-        spinnerCurrencies.setSelection(currenciesList.indexOf(mAsset.currency))
+        currenciesList?.let {
+            spinnerCurrencies.setSelection(it.indexOf(mAsset.currency))
+        }
+
         edit_name.setText(mAsset.name)
         edit_description.setText(mAsset.description)
         edit_amount.setText(mAsset.amount.toString())
@@ -106,15 +94,19 @@ class NewAssetActivity : AppCompatActivity() {
 
 
     private fun updateCurrenciesList() {
-        // Create an ArrayAdapter using the string array and a default spinner layout
+        lifecycleScope.launch(Dispatchers.IO){
+            currenciesList = newAssetViewModel.getCryptoCodes()
+            withContext(Dispatchers.Main){
+                setSpinnerItems(currenciesList)
+            }
+        }
 
+        /*if(isCrypto){
 
-        if(isCrypto){
-            setupObserver()
         } else {
             currenciesList =getFiatCurrencyCodes()
             setSpinnerItems(currenciesList)
-        }
+        }*/
 
 
     }
@@ -137,6 +129,8 @@ class NewAssetActivity : AppCompatActivity() {
             }
 
         }
+        adapter.notifyDataSetChanged()
+        switchFiatCrypto.isChecked = isCrypto
     }
 
 
