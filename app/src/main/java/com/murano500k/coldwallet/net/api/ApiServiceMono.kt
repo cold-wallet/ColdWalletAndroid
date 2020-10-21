@@ -1,6 +1,6 @@
 package com.murano500k.coldwallet.net.api
 
-import com.murano500k.coldwallet.net.model.FiatExchangeInfoItem
+import com.murano500k.coldwallet.net.model.FiatExchangeInfo
 import retrofit2.http.GET
 
 interface ApiServiceMono {
@@ -8,6 +8,6 @@ interface ApiServiceMono {
         const val BASE_URL_MONO = "https://api.monobank.ua/"
     }
 
-    @GET("/bank/currency/")
-    suspend fun getFiatExchangePrices(): List<FiatExchangeInfoItem>
+    @GET("bank/currency")
+    suspend fun getFiatExchangePrices(): FiatExchangeInfo
 }

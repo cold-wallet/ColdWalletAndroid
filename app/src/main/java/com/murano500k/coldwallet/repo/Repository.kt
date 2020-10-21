@@ -106,7 +106,7 @@ class Repository @Inject constructor(
 
     suspend fun fetchFiatPricePairs(){
         try {
-            if(getFiatPricePairs().isEmpty()){
+            if(getFiatPricePairs().isEmpty() || true){
                 Log.w(TAG, "fetchFiatPricePairs from network");
                 val prices = apiServiceMono.getFiatExchangePrices()
                 insertFiatPricesToDb(prices)
