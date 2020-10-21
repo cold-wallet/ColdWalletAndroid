@@ -8,14 +8,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.murano500k.coldwallet.AssetListAdapter
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.database.Asset
-import com.murano500k.coldwallet.viewmodel.AssetViewModel
 import com.murano500k.coldwallet.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
@@ -30,7 +28,6 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity(),
     AssetListAdapter.OnEditListener {
 
-    private lateinit var assetViewModel: AssetViewModel
     private val newAssetRequestCode = 1
     private val editAssetRequestCode = 2
     private val mainViewModel: MainViewModel by viewModels()
@@ -44,7 +41,6 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initButtons()
-        assetViewModel = ViewModelProvider(this).get(AssetViewModel::class.java)
         initListView()
         fetchData()
 
@@ -82,7 +78,7 @@ class MainActivity : AppCompatActivity(),
         val adapter = AssetListAdapter(this, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        assetViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
+        mainViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
             assets?.let { adapter.setAssets(it) }
         })
 
@@ -109,7 +105,7 @@ class MainActivity : AppCompatActivity(),
             if (resultCode == Activity.RESULT_OK) {
                 data?.getParcelableExtra<Asset>(NewAssetActivity.EXTRA_ASSET)?.let {
                     Log.w(TAG, "insert $it ");
-                    assetViewModel.insert(it)
+                    mainViewModel.insert(it)
                 }
             } else {
                 Toast.makeText(
@@ -122,7 +118,7 @@ class MainActivity : AppCompatActivity(),
             if (resultCode == Activity.RESULT_OK) {
                 data?.getParcelableExtra<Asset>(NewAssetActivity.EXTRA_ASSET)?.let {
                     Log.w(TAG, "update $it ");
-                    assetViewModel.update(it)
+                    mainViewModel.update(it)
                 }
             } else {
                 Toast.makeText(
@@ -136,7 +132,7 @@ class MainActivity : AppCompatActivity(),
 
 
     override fun deleteButtonClicked(asset: Asset) {
-        assetViewModel.delete(asset)
+        mainViewModel.delete(asset)
     }
 
     override fun onEditClicked(asset: Asset) {

@@ -3,6 +3,7 @@ package com.murano500k.coldwallet.repo
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.murano500k.coldwallet.database.*
 import com.murano500k.coldwallet.net.api.ApiServiceBinance
 import com.murano500k.coldwallet.net.api.ApiServiceMono
@@ -25,6 +26,19 @@ class Repository @Inject constructor(
     companion object {
         const val TAG = "Repository"
         const val ERROR_FLOAT = -1.0f
+    }
+    // Room executes all queries on a separate thread.
+    // Observed LiveData will notify the observer when the data has changed.
+    val allAssets: LiveData<List<Asset>> = assetDao.getLiveAssets()
+
+    suspend fun insert(asset: Asset) {
+        assetDao.insert(asset)
+    }
+    suspend fun delete(asset: Asset) {
+        assetDao.delete(asset)
+    }
+    suspend fun update(asset: Asset) {
+        assetDao.update(asset)
     }
 
     suspend fun getAllAssets() = assetDao.getAssets()
@@ -155,4 +169,6 @@ class Repository @Inject constructor(
     private fun getCrossRate(rateBuy : Double, rateSell: Double): Double{
         return (rateBuy + rateSell) / 2
     }
+
+
 }
