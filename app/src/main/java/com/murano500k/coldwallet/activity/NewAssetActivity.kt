@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
@@ -38,15 +37,12 @@ class NewAssetActivity : AppCompatActivity() {
     private var currenciesList: List<String> =ArrayList()
     private lateinit var mAsset: Asset
 
-    private lateinit var cryptoViewModel: CryptoViewModel
     private val newAssetViewModel: NewAssetViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_asset)
-        setupViewModel()
-
         switchFiatCrypto.setOnCheckedChangeListener { compoundButton: CompoundButton, isChecked: Boolean ->
             Log.w(TAG, "OnCheckedChange: isChecked=$isChecked isCrypto=$isCrypto" );
             if (isCrypto != isChecked) {
@@ -70,9 +66,6 @@ class NewAssetActivity : AppCompatActivity() {
         initValues()
     }
 
-    private fun setupViewModel() {
-        cryptoViewModel = ViewModelProvider(this).get(CryptoViewModel::class.java)
-    }
 
 
     private fun initAsset() {
