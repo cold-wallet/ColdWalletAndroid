@@ -14,5 +14,6 @@ class MainViewModel @ViewModelInject constructor(
 ): AndroidViewModel(application)   {
     suspend fun initData(){
         repository.initData()
+
     }
 }

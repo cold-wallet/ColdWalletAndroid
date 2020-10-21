@@ -16,7 +16,7 @@ import java.math.BigDecimal
 
 
 @ActivityRetainedScoped
-class AllRatesViewModel @ViewModelInject constructor(
+class RatesViewModel @ViewModelInject constructor(
     private val repository: Repository,
     private val transformationHelper : TransormationHelper,
     application: Application

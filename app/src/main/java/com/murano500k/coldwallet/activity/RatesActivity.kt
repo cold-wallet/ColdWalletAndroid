@@ -20,20 +20,20 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.murano500k.coldwallet.ConvertedAsset
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.net.utils.Status
-import com.murano500k.coldwallet.viewmodel.AllRatesViewModel
+import com.murano500k.coldwallet.viewmodel.RatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.android.synthetic.main.activity_all_rates.*
 
 @AndroidEntryPoint
 @ActivityScoped
-class AllRatesActivity: AppCompatActivity(), OnChartValueSelectedListener {
+class RatesActivity: AppCompatActivity(), OnChartValueSelectedListener {
 
     companion object {
         const val TAG = "AllRatesActivity"
     }
 
-    private val allRatesViewModel: AllRatesViewModel by viewModels()
+    private val ratesViewModel: RatesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +45,13 @@ class AllRatesActivity: AppCompatActivity(), OnChartValueSelectedListener {
 
     private fun setupButton() {
         fabRefresh.setOnClickListener{
-            allRatesViewModel.fetchConvertedAssets("EUR", false)
+            ratesViewModel.fetchConvertedAssets("EUR", false)
         }
     }
 
 
     private fun setupObserver() {
-        allRatesViewModel.getConvertedAssets().observe(this, Observer {
+        ratesViewModel.getConvertedAssets().observe(this, Observer {
             when (it.status) {
                 Status.SUCCESS -> {
                     progressBar.visibility = View.GONE

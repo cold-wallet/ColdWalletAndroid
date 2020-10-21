@@ -16,7 +16,6 @@ import androidx.lifecycle.lifecycleScope
 import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.database.Asset
-import com.murano500k.coldwallet.viewmodel.CryptoViewModel
 import com.murano500k.coldwallet.viewmodel.NewAssetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped

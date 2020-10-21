@@ -13,14 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AllRatesActivity"></activity>
-        <activity android:name=".activity.CryptoActivity" />
-        <activity android:name=".activity.RatesActivity" />
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
+        <activity android:name=".activity.RatesActivity"/>
         <activity android:name=".activity.NewAssetActivity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>

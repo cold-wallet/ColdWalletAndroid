@@ -94,12 +94,11 @@ class MainActivity : AppCompatActivity(),
             startActivityForResult(intent, newAssetRequestCode)
         }
         button_rates.setOnClickListener {
-            val intent = Intent(this@MainActivity, AllRatesActivity::class.java)
+            val intent = Intent(this@MainActivity, RatesActivity::class.java)
             startActivity(intent)
         }
         button_crypto.setOnClickListener {
-            val intent = Intent(this@MainActivity, CryptoActivity::class.java)
-            startActivity(intent)
+
         }
     }
 
