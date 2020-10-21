@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 @Database(entities = arrayOf(
     Asset::class,
     CryptoCode::class,
-    CryptoPricePair::class
-), version = 3, exportSchema = false)
+    CryptoPricePair::class,
+    FiatPricePair::class
+), version = 5, exportSchema = false)
 public abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun assetDao(): AssetDao
@@ -20,6 +21,8 @@ public abstract class MyRoomDatabase : RoomDatabase() {
     abstract fun cryptoCodeDao(): CryptoCodeDao
 
     abstract fun cryptoPricePairDao(): CryptoPricePairDao
+
+    abstract fun fiatPricePairDao(): FiatPricePairDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

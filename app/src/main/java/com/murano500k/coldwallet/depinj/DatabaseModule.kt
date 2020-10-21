@@ -1,10 +1,7 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import android.content.Context
-import com.murano500k.coldwallet.database.AssetDao
-import com.murano500k.coldwallet.database.CryptoCodeDao
-import com.murano500k.coldwallet.database.CryptoPricePairDao
-import com.murano500k.coldwallet.database.MyRoomDatabase
+import com.murano500k.coldwallet.database.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,5 +36,10 @@ object DatabaseModule {
     @Provides
     fun provideCryptoPricePairDao(database: MyRoomDatabase): CryptoPricePairDao {
         return database.cryptoPricePairDao()
+    }
+    @Singleton
+    @Provides
+    fun provideFiatPricePairDao(database: MyRoomDatabase): FiatPricePairDao {
+        return database.fiatPricePairDao()
     }
 }

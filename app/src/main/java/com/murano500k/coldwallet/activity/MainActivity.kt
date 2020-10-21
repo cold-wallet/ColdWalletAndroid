@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -12,8 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.murano500k.coldwallet.AssetListAdapter
+import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.database.Asset
-import com.murano500k.coldwallet.net.CryptoActivity
+import com.murano500k.coldwallet.viewmodel.AssetViewModel
+import com.murano500k.coldwallet.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.android.synthetic.main.activity_main.*
@@ -91,7 +94,7 @@ class MainActivity : AppCompatActivity(),
             startActivityForResult(intent, newAssetRequestCode)
         }
         button_rates.setOnClickListener {
-            val intent = Intent(this@MainActivity, RatesActivity::class.java)
+            val intent = Intent(this@MainActivity, AllRatesActivity::class.java)
             startActivity(intent)
         }
         button_crypto.setOnClickListener {

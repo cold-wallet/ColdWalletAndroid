@@ -4,7 +4,7 @@ import com.murano500k.coldwallet.net.model.ExchangeInfo
 import com.murano500k.coldwallet.net.model.PriceItem
 import retrofit2.http.GET
 
-interface ApiService {
+interface ApiServiceBinance {
     companion object {
         const val BASE_URL = "https://api.binance.com/"
     }

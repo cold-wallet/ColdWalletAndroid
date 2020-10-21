@@ -12,6 +12,16 @@
         android:layout_height="wrap_content">
 
 
+        <ImageView
+            android:id="@+id/imageCurrencyType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/btc" />
+
         <TextView
             android:id="@+id/textDescription"
             android:layout_width="wrap_content"
@@ -29,7 +39,7 @@
             android:layout_marginTop="16dp"
             android:text="USD"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageCurrencyType"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -37,25 +47,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:text="USD amount"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCurrency" />
+            app:layout_constraintBottom_toBottomOf="@+id/textCurrency"
+            app:layout_constraintStart_toEndOf="@+id/textCurrency"
+            app:layout_constraintTop_toTopOf="@+id/textCurrency" />
 
         <TextView
             android:id="@+id/textAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:ems="10"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
 
 
-            app:layout_constraintBottom_toBottomOf="@+id/textCurrency"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonRemove"
-            app:layout_constraintStart_toEndOf="@+id/textCurrency"
-            app:layout_constraintTop_toTopOf="@+id/textCurrency" />
+            app:layout_constraintStart_toEndOf="@+id/imageCurrencyType"
+            app:layout_constraintTop_toBottomOf="@+id/textCurrency" />
 
         <ImageButton
             android:id="@+id/buttonRemove"

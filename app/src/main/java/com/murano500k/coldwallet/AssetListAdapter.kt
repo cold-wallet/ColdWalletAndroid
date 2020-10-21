@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.murano500k.coldwallet.database.Asset
@@ -28,6 +29,7 @@ companion object{
         val textDescription: TextView = itemView.findViewById(R.id.textDescription)
         var textAmount: TextView = itemView.findViewById(R.id.textAmount)
         var buttonRemove: ImageButton = itemView.findViewById(R.id.buttonRemove)
+        var imageType: ImageView = itemView.findViewById(R.id.imageCurrencyType)
 
     }
 
@@ -44,6 +46,12 @@ companion object{
         holder.textDescription.visibility = GONE
 
         holder.textAmount.setText(current.amount.toString())
+
+        if(current.type == CURRENCY_TYPE.CRYPTO.ordinal) {
+            holder.imageType.setImageResource(R.drawable.ic_crypto)
+        }else {
+            holder.imageType.setImageResource(R.drawable.ic_dollar)
+        }
         holder.buttonRemove.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Are you sure you want to delete ${current.name}?")

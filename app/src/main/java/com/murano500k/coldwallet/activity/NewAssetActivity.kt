@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -13,8 +13,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.murano500k.coldwallet.CURRENCY_TYPE
+import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.database.Asset
-import com.murano500k.coldwallet.net.CryptoViewModel
+import com.murano500k.coldwallet.viewmodel.CryptoViewModel
+import com.murano500k.coldwallet.viewmodel.NewAssetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.android.synthetic.main.activity_new_asset.*
@@ -46,9 +49,10 @@ class NewAssetActivity : AppCompatActivity() {
         setupViewModel()
 
         switchFiatCrypto.setOnCheckedChangeListener { compoundButton: CompoundButton, isChecked: Boolean ->
+            Log.w(TAG, "OnCheckedChange: isChecked=$isChecked isCrypto=$isCrypto" );
             if (isCrypto != isChecked) {
-                updateCurrenciesList()
                 isCrypto = isChecked
+                updateCurrenciesList()
             }
         }
 
@@ -94,21 +98,17 @@ class NewAssetActivity : AppCompatActivity() {
 
 
     private fun updateCurrenciesList() {
-        lifecycleScope.launch(Dispatchers.IO){
-            currenciesList = newAssetViewModel.getCryptoCodes()
-            withContext(Dispatchers.Main){
-                setSpinnerItems(currenciesList)
+        if(isCrypto){
+            lifecycleScope.launch(Dispatchers.IO){
+                currenciesList = newAssetViewModel.getCryptoCodes()
+                withContext(Dispatchers.Main){
+                    setSpinnerItems(currenciesList)
+                }
             }
-        }
-
-        /*if(isCrypto){
-
         } else {
-            currenciesList =getFiatCurrencyCodes()
+            currenciesList =newAssetViewModel.getFiatCodes()
             setSpinnerItems(currenciesList)
-        }*/
-
-
+        }
     }
     private fun setSpinnerItems( currenciesList: List<String>){
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currenciesList )
@@ -130,7 +130,7 @@ class NewAssetActivity : AppCompatActivity() {
 
         }
         adapter.notifyDataSetChanged()
-        switchFiatCrypto.isChecked = isCrypto
+        //switchFiatCrypto.isChecked = isCrypto
     }
 
 
@@ -138,9 +138,9 @@ class NewAssetActivity : AppCompatActivity() {
     private fun parseAsset(): Asset {
         val type: Int
         if(switchFiatCrypto.isChecked) {
-            type = CURRENCY_TYPE.FIAT.ordinal
-        } else {
             type = CURRENCY_TYPE.CRYPTO.ordinal
+        } else {
+            type = CURRENCY_TYPE.FIAT.ordinal
         }
         val amount = edit_amount.text.toString().toFloat()
         val currency = spinnerCurrencies.getSelectedItem().toString()

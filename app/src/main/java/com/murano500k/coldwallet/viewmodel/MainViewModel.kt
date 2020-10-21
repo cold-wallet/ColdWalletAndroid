@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.viewmodel
 
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject

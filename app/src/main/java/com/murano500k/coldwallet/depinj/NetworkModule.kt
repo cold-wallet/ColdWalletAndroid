@@ -1,13 +1,15 @@
 package com.nicoqueijo.android.currencyconverter.kotlin.depinj
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.murano500k.coldwallet.net.api.ApiService
+import com.murano500k.coldwallet.net.api.ApiServiceBinance
+import com.murano500k.coldwallet.net.api.ApiServiceMono
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -16,15 +18,36 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideExchangeRateService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun provideBinanceApiService(@Named("retrofitBinance") retrofit: Retrofit): ApiServiceBinance {
+        return retrofit.create(ApiServiceBinance::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideRetrofit(baseUrl : String, gsonConverterFactory: GsonConverterFactory): Retrofit {
+    fun provideMonoApiService(@Named("retrofitMono") retrofitMono: Retrofit): ApiServiceMono {
+        return retrofitMono.create(ApiServiceMono::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @Named("retrofitBinance")
+    fun provideRetrofit(@Named("baseUrlBinance") baseUrl : String,
+                        gsonConverterFactory: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+    }
+
+
+    @Singleton
+    @Provides
+    @Named("retrofitMono")
+    fun provideRetrofitMono(@Named("baseUrlMono") baseUrlMono : String,
+                            gsonConverterFactory: GsonConverterFactory): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrlMono)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(gsonConverterFactory)
             .build()
@@ -38,7 +61,15 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @Named("baseUrlBinance")
     fun provideBaseUrl(): String {
-        return ApiService.BASE_URL
+        return ApiServiceBinance.BASE_URL
+    }
+
+    @Singleton
+    @Provides
+    @Named("baseUrlMono")
+    fun provideBaseUrlMono(): String {
+        return ApiServiceMono.BASE_URL_MONO
     }
 }

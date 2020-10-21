@@ -4,17 +4,22 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.murano500k.coldwallet.database.*
-import com.murano500k.coldwallet.net.api.ApiService
+import com.murano500k.coldwallet.net.api.ApiServiceBinance
+import com.murano500k.coldwallet.net.api.ApiServiceMono
 import com.murano500k.coldwallet.net.model.ExchangeInfo
+import com.murano500k.coldwallet.net.model.FiatExchangeInfoItem
 import com.murano500k.coldwallet.net.model.Symbol
+import com.murano500k.coldwallet.net.utils.FiatCodesParser
 import javax.inject.Inject
 
 class Repository @Inject constructor(
     private val context: Context,
-    private val apiService: ApiService,
+    private val apiServiceBinance: ApiServiceBinance,
+    private val apiServiceMono: ApiServiceMono,
     private val assetDao: AssetDao,
     private val cryptoCodeDao: CryptoCodeDao,
     private val cryptoPricePairDao: CryptoPricePairDao,
+    private val fiatPricePairDao: FiatPricePairDao,
     private val sharedPreferences: SharedPreferences
 ) {
     companion object {
@@ -22,21 +27,33 @@ class Repository @Inject constructor(
         const val ERROR_FLOAT = -1.0f
     }
 
-    fun getAllAssets() = assetDao.getAssets()
+    suspend fun getAllAssets() = assetDao.getAssets()
 
     suspend fun getCryptoCodes() = cryptoCodeDao.getCryptoCodes().map { it.name }
 
-    fun getCryptoPricePairs() = cryptoPricePairDao.getCryptoPricePairs()
+    fun getFiatCodes() = fiatCodesParser.fiatCurrencies.map{ it.code}
+
+    suspend fun getCryptoPricePairs() = cryptoPricePairDao.getCryptoPricePairs()
+
+    suspend fun getFiatPricePairs() = fiatPricePairDao.getFiatPricePairs()
+
+
+    private val fiatCodesParser: FiatCodesParser
+
+    init {
+        fiatCodesParser = FiatCodesParser(context)
+    }
 
     suspend fun initData(){
         fetchCryptoCodes()
         fetchCryptoPricePairs()
+        fetchFiatPricePairs()
     }
 
     suspend fun fetchCryptoCodes() {
         try {
             if(cryptoCodeDao.getCryptoCodes().isEmpty()){
-                val exchangeInfo = apiService.getExchangeInfo()
+                val exchangeInfo = apiServiceBinance.getExchangeInfo()
                 Log.w(TAG, "fetchCryptoCodes from network  "+exchangeInfo.timezone);
                 val listCodes = parseCryptoCodes(exchangeInfo)
                 cryptoCodeDao.insertAll(listCodes.map{string ->
@@ -47,6 +64,7 @@ class Repository @Inject constructor(
             }
         }catch (e:Exception) {
             e.printStackTrace()
+            Log.e(TAG, "fetchCryptoCodes from network error", e);
         }
     }
 
@@ -67,36 +85,74 @@ class Repository @Inject constructor(
     suspend fun fetchCryptoPricePairs(){
         try {
             if(getCryptoPricePairs().isEmpty()){
-                val prices = apiService.getAllPrices()
+                Log.w(TAG, "fetchCryptoPricePairs from network ");
+
+                val prices = apiServiceBinance.getAllPrices()
                 cryptoPricePairDao.insertAll(prices.map { priceItem -> CryptoPricePair(priceItem.symbol, priceItem.price) })
+                Log.w(TAG, "fetchCryptoPricePairs from network ok");
             }else{
-                Log.w(TAG, "fetchCryptoCodes from db ");
+                Log.w(TAG, "fetchCryptoPricePairs from db ");
+                /*getCryptoPricePairs().forEach {
+                    Log.w(TAG, "fetchCryptoPricePairs ${it.symbol} ${it.price}")
+                }*/
             }
         }catch (e:Exception) {
             e.printStackTrace()
+            Log.e(TAG, "fetchCryptoPricePairs from network error", e)
         }
     }
 
 
-    fun getCryptoRate(rateFrom: String, rateTo: String) : Float {
-        val symbol = "${rateFrom}${rateTo}"
-        val symbolReverse = "${rateTo}${rateFrom}"
-        if(rateFrom.equals(rateTo)){
-            //smae currency
-            return 1.0f
+
+    suspend fun fetchFiatPricePairs(){
+        try {
+            if(getFiatPricePairs().isEmpty()){
+                Log.w(TAG, "fetchFiatPricePairs from network");
+                val prices = apiServiceMono.getFiatExchangePrices()
+                insertFiatPricesToDb(prices)
+                Log.w(TAG, "fetchFiatPricePairs from network ok");
+            }else{
+                Log.w(TAG, "fetchFiatPricePairs from db ");
+                getFiatPricePairs().forEach {
+                    Log.w(TAG, "fetchCryptoPricePairs ${it.currencyCodeA} ${it.currencyCodeB} ${it.rateCross}")
+                }
+            }
+        }catch (e:Exception) {
+            e.printStackTrace()
+            Log.e(TAG, "fetchFiatPricePairs from network error", e);
+            insertFiatPricesToDb(fiatCodesParser.listFiatExchangeInfo)
         }
-        getCryptoPricePairs().forEach{item ->
-            if(item.symbol.contains(symbol)) return item.price.toFloat()
-            if(item.symbol.contains(symbolReverse)) return item.price.toFloat()
-        }
-        return ERROR_FLOAT
     }
 
-    fun convertCrypto(amount: Float, rateFrom: String, rateTo: String): Float {
-        val rate = getCryptoRate(rateFrom, rateTo)
-        if(rate < 0) return ERROR_FLOAT
-        else {
-            return amount * rate
+    private suspend fun insertFiatPricesToDb(pricesFromApi: List<FiatExchangeInfoItem>) {
+        var listDb = ArrayList<FiatPricePair>()
+        var fiatCodesParser = FiatCodesParser(context)
+
+        pricesFromApi.forEach { price ->
+            run {
+                var rateCross: Double = 0.0
+                if (price.rateCross > 0) {
+                    rateCross = price.rateCross
+                }else if(price.rateBuy > 0 && price.rateSell > 0){
+                    rateCross = getCrossRate(price.rateBuy, price.rateSell)
+                }
+                if(rateCross != 0.0) {
+                    listDb.add(
+                        FiatPricePair(
+                            fiatCodesParser.getCurrencyNameFromCode(price.currencyCodeA),
+                            fiatCodesParser.getCurrencyNameFromCode(price.currencyCodeB),
+                            rateCross.toString()
+                        )
+                    )
+                }
+            }
         }
+        if(listDb.size > 0){
+            Log.w(TAG, "insertFiatPricesToDb ok size=${listDb.size} ");
+            fiatPricePairDao.insertAll(listDb)
+        }
+    }
+    private fun getCrossRate(rateBuy : Double, rateSell: Double): Double{
+        return (rateBuy + rateSell) / 2
     }
 }

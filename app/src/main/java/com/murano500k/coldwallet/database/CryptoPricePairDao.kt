@@ -9,7 +9,7 @@ import androidx.room.Query
 interface CryptoPricePairDao {
 
     @Query("SELECT * from cryptopricepair_table ORDER BY symbol ASC")
-    fun getCryptoPricePairs(): List<CryptoPricePair>
+    suspend fun getCryptoPricePairs(): List<CryptoPricePair>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(list: List<CryptoPricePair>)

@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.viewmodel
 
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
@@ -13,4 +13,5 @@ class NewAssetViewModel @ViewModelInject constructor(
     application: Application
 ): AndroidViewModel(application)   {
     suspend fun getCryptoCodes() = repository.getCryptoCodes()
+    fun getFiatCodes() = repository.getFiatCodes()
 }
