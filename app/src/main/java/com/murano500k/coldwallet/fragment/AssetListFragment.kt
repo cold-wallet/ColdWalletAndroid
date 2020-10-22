@@ -55,7 +55,7 @@ class AssetListFragment : Fragment(), AssetListAdapter.OnEditListener {
     }
 
     private fun initList() {
-        val adapter = context?.let { AssetListAdapter(it, this) }
+        val adapter = context?.let { AssetListAdapter(it, this, viewModel) }
         recyclerViewAssets.adapter = adapter
         recyclerViewAssets.layoutManager = LinearLayoutManager(context)
         viewModel.allAssets.observe(viewLifecycleOwner, androidx.lifecycle.Observer { assets ->

@@ -10,11 +10,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.murano500k.coldwallet.database.Asset
+import com.murano500k.coldwallet.viewmodel.AssetListViewModel
 
 
 class AssetListAdapter internal constructor(
     private val context: Context,
-    private val listener: OnEditListener
+    private val listener: OnEditListener,
+    private val viewModel: AssetListViewModel
 ) : RecyclerView.Adapter<AssetListAdapter.AssetViewHolder>() {
 companion object{
     const val TAG = "AssetListAdapter"

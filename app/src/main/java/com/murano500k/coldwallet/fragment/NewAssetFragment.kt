@@ -20,7 +20,6 @@ class NewAssetFragment : Fragment() {
             isCrypto = (asset.type == CURRENCY_TYPE.CRYPTO.ordinal)
         }else{
             isCrypto = arguments?.getBoolean("arg_is_crypto")!!
-
         }
     }
 
@@ -31,5 +30,6 @@ class NewAssetFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_asset, container, false)
     }
+
 
 }
