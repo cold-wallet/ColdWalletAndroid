@@ -120,16 +120,16 @@ class Repository @Inject constructor(
 
     suspend fun fetchFiatPricePairs(){
         try {
-            if(getFiatPricePairs().isEmpty() || true){
+            if(getFiatPricePairs().isEmpty()){
                 Log.w(TAG, "fetchFiatPricePairs from network");
                 val prices = apiServiceMono.getFiatExchangePrices()
                 insertFiatPricesToDb(prices)
                 Log.w(TAG, "fetchFiatPricePairs from network ok");
             }else{
                 Log.w(TAG, "fetchFiatPricePairs from db ");
-                getFiatPricePairs().forEach {
+                /*getFiatPricePairs().forEach {
                     Log.w(TAG, "fetchCryptoPricePairs ${it.currencyCodeA} ${it.currencyCodeB} ${it.rateCross}")
-                }
+                }*/
             }
         }catch (e:Exception) {
             e.printStackTrace()

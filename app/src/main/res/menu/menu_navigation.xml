@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/assetListFragment"
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="@string/assets" />
+
+    <item
+        android:id="@+id/pieChartFragment"
+        android:icon="@drawable/ic_baseline_pie_chart_24"
+        android:title="@string/chart_title" />
+
+    <item
+        android:id="@+id/statsFragment"
+        android:icon="@drawable/ic_stats"
+        android:title="@string/stats_title" />
+
+</menu>

@@ -1,6 +1,5 @@
 package com.murano500k.coldwallet
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -53,18 +52,7 @@ companion object{
             holder.imageType.setImageResource(R.drawable.ic_dollar)
         }
         holder.buttonRemove.setOnClickListener {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage("Are you sure you want to delete ${current.name}?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
-                    listener.deleteButtonClicked(current)
-                }
-                .setNegativeButton("No") { dialog, id ->
-                    // Dismiss the dialog
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
+            listener.deleteButtonClicked(current)
         }
         holder.itemView.setOnClickListener {
             listener.onEditClicked(current)
