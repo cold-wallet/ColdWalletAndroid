@@ -21,4 +21,10 @@ class AssetListViewModel @ViewModelInject constructor(
     fun delete(asset: Asset) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(asset)
     }
+
+    fun updateAsset(updatedAsset: Asset) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.update(updatedAsset)
+        }
+    }
 }

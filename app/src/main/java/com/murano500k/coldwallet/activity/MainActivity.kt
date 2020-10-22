@@ -75,12 +75,12 @@ class MainActivity : AppCompatActivity(),
 
     private fun initListView(){
         val recyclerView = findViewById<RecyclerView>(R.id.list_assets)
-        val adapter = AssetListAdapter(this, this)
+        /*val adapter = AssetListAdapter(this, this, AssetListViewModel())
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        mainViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
+        */recyclerView.layoutManager = LinearLayoutManager(this)
+        /*mainViewModel.allAssets.observe(this, androidx.lifecycle.Observer { assets ->
             assets?.let { adapter.setAssets(it) }
-        })
+        })*/
 
     }
 

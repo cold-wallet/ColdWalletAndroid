@@ -1,10 +1,12 @@
 package com.murano500k.coldwallet
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,7 +30,7 @@ companion object{
         val textCurrency: TextView = itemView.findViewById(R.id.textCurrency)
         val textName: TextView = itemView.findViewById(R.id.textName)
         val textDescription: TextView = itemView.findViewById(R.id.textDescription)
-        var textAmount: TextView = itemView.findViewById(R.id.textAmount)
+        var textAmount: EditText = itemView.findViewById(R.id.textAmount)
         var buttonRemove: ImageButton = itemView.findViewById(R.id.buttonRemove)
         var imageType: ImageView = itemView.findViewById(R.id.imageCurrencyType)
 
@@ -47,6 +49,27 @@ companion object{
         holder.textDescription.visibility = GONE
 
         holder.textAmount.setText(current.amount.toString())
+        holder.textAmount.onFocusChangeListener = View.OnFocusChangeListener(function = {
+                view, hasFocus ->
+            if(!hasFocus) {
+                var newAmount = holder.textAmount.text.toString()
+                if(newAmount == current.amount.toString()) return@OnFocusChangeListener
+                if (newAmount.isNotBlank()) {
+                    if (!newAmount.contains(".")) newAmount += ".0"
+                    try {
+                        val newAmountNum = newAmount.toFloat()
+                        current.amount = newAmountNum
+                        Log.w(TAG, "2 viewModel.updateAsset(${current.amount})");
+                        viewModel.updateAsset(current)
+                        return@OnFocusChangeListener
+                    } catch (e: NumberFormatException) {
+
+                    }
+                }else {
+                    holder.textAmount.setText(current.amount.toString())
+                }
+            }
+        })
 
         if(current.type == CURRENCY_TYPE.CRYPTO.ordinal) {
             holder.imageType.setImageResource(R.drawable.ic_crypto)
@@ -55,9 +78,6 @@ companion object{
         }
         holder.buttonRemove.setOnClickListener {
             listener.deleteButtonClicked(current)
-        }
-        holder.itemView.setOnClickListener {
-            listener.onEditClicked(current)
         }
     }
 
