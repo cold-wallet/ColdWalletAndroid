@@ -1,8 +1,7 @@
-package com.murano500k.coldwallet.transofm
+package com.murano500k.coldwallet.components
 
 import android.content.Context
 import android.util.Log
-import com.murano500k.coldwallet.repo.Repository
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -57,7 +56,7 @@ class TransormationHelper @Inject constructor(
     private suspend fun getCryptoRate(rateFrom: String, rateTo: String) : BigDecimal {
         val symbol = "${rateFrom}${rateTo}"
         val symbolReverse = "${rateTo}${rateFrom}"
-        Log.w(TAG, "getCryptoRate: symbol=$symbol symbolReverse=$symbolReverse" );
+        Log.w(TAG, "getCryptoRate: symbol=$symbol symbolReverse=$symbolReverse" )
 
         if(rateFrom.equals(rateTo)){
             //same currency
@@ -65,12 +64,12 @@ class TransormationHelper @Inject constructor(
         }
         repository.getCryptoPricePairs().forEach{item ->
             if(item.symbol.contains(symbol)) {
-                Log.w(TAG, "getCryptoRate: symbol=$symbol item.price= ${item.price}" );
+                Log.w(TAG, "getCryptoRate: symbol=$symbol item.price= ${item.price}" )
                 return BigDecimal(item.price)
             }
             if(item.symbol.contains(symbolReverse)) {
                 val result = 1 / item.price.toDouble()
-                Log.w(TAG, "getCryptoRate: symbolReverse=$symbolReverse iresult= ${result}" );
+                Log.w(TAG, "getCryptoRate: symbolReverse=$symbolReverse iresult= ${result}" )
                 return BigDecimal(result)
             }
         }
@@ -79,7 +78,7 @@ class TransormationHelper @Inject constructor(
     private suspend fun getRateEURtoUSD(): BigDecimal {
         repository.getFiatPricePairs().forEach {
             if(it.currencyCodeA.equals(CODE_EUR) && it.currencyCodeB.equals(CODE_USD)) {
-                Log.w(TAG, "getRateEURtoUSD: ${it.rateCross} " );
+                Log.w(TAG, "getRateEURtoUSD: ${it.rateCross} " )
                 return BigDecimal(it.rateCross)
             }
         }
@@ -140,16 +139,16 @@ class TransormationHelper @Inject constructor(
         baseCode: String,
         compareCode: String
     ): BigDecimal {
-        Log.w(TAG, "convertCryptoToFiat: $amount $baseCode to $compareCode" );
+        Log.w(TAG, "convertCryptoToFiat: $amount $baseCode to $compareCode" )
 
         val cryptoRateToBTC = getCryptoRate(baseCode, CODE_BTC)
         val amountInBTC = amount * cryptoRateToBTC
 
-        Log.w(TAG, "convertCryptoToFiat: amountInBTC=$amountInBTC cryptoRateToBTC=$cryptoRateToBTC" );
+        Log.w(TAG, "convertCryptoToFiat: amountInBTC=$amountInBTC cryptoRateToBTC=$cryptoRateToBTC" )
 
         val rateBTCUAH = getCryptoRate(CODE_BTC, CODE_UAH)
         val amountInUAH = amountInBTC * rateBTCUAH
-        Log.w(TAG, "convertCryptoToFiat: rateBTCUAH=$rateBTCUAH amountInUAH=$amountInUAH" );
+        Log.w(TAG, "convertCryptoToFiat: rateBTCUAH=$rateBTCUAH amountInUAH=$amountInUAH" )
 
 
         return amountInUAH / getFiatRateToUAH(compareCode)

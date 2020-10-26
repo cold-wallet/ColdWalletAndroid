@@ -1,5 +1,6 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.model
 
+import com.murano500k.coldwallet.R
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.ExpandableItem
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
@@ -19,7 +20,7 @@ class ExpandableHeaderItem(val title: String) : Item() , ExpandableItem {
     }
 
     override fun getLayout(): Int {
-        return  R.layout.item_stats_parent
+        return R.layout.item_stats_parent
     }
 
     private fun changeStuff(viewHolder: GroupieViewHolder) {
@@ -27,7 +28,8 @@ class ExpandableHeaderItem(val title: String) : Item() , ExpandableItem {
         viewHolder.root.indicator.apply {
             setImageResource(
                 if (expandableGroup.isExpanded) R.drawable.ic_expanded_indicator
-                else R.drawable.ic_collapsed_indicator)
+                else R.drawable.ic_collapsed_indicator
+            )
         }
 
     }

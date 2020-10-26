@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.model
 
 import com.murano500k.coldwallet.database.Asset
 import java.math.BigDecimal

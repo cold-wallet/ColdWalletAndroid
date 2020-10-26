@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import com.murano500k.coldwallet.database.Asset
-import com.murano500k.coldwallet.repo.Repository
+import com.murano500k.coldwallet.components.Repository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 

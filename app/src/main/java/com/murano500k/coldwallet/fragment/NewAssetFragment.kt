@@ -15,12 +15,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
-import com.murano500k.coldwallet.activity.NewAssetActivity
+import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
 import com.murano500k.coldwallet.viewmodel.NewAssetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ActivityScoped
-import kotlinx.android.synthetic.main.activity_new_asset.*
+import kotlinx.android.synthetic.main.fragment_new_asset.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,7 +93,7 @@ class NewAssetFragment : Fragment() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val name = adapter.getItem(position)
-                Log.w(NewAssetActivity.TAG, "onItemSelected: $name amount" );
+                Log.w(TAG, "onItemSelected: $name amount" )
                 edit_name.setText("$name amount")
                 edit_name.selectAll()
             }
@@ -110,7 +110,7 @@ class NewAssetFragment : Fragment() {
             type = CURRENCY_TYPE.FIAT.ordinal
         }
         val amount = edit_amount.text.toString().toFloat()
-        val currency = spinnerCurrencies.getSelectedItem().toString()
+        val currency = spinnerCurrencies.selectedItem.toString()
         //val currency = edit_currency.text.toString()
         val name = edit_name.text.toString()
         val description = edit_description.text.toString()

@@ -15,7 +15,8 @@
         android:clickable="true"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="TODO" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAssets"

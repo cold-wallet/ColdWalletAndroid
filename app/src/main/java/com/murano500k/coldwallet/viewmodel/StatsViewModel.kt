@@ -6,11 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.murano500k.coldwallet.CURRENCY_TYPE
-import com.murano500k.coldwallet.StatsItem
-import com.murano500k.coldwallet.StatsRow
+import com.murano500k.coldwallet.model.StatsItem
+import com.murano500k.coldwallet.model.StatsRow
 import com.murano500k.coldwallet.net.utils.Resource
-import com.murano500k.coldwallet.repo.Repository
-import com.murano500k.coldwallet.transofm.TransormationHelper
+import com.murano500k.coldwallet.components.Repository
+import com.murano500k.coldwallet.components.TransormationHelper
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.launch
 import java.math.BigDecimal

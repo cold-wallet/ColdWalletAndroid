@@ -1,4 +1,4 @@
-package com.murano500k.coldwallet
+package com.murano500k.coldwallet.model
 
 import android.content.Context
 import android.util.Log
@@ -11,6 +11,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.murano500k.coldwallet.CURRENCY_TYPE
+import com.murano500k.coldwallet.R
+import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
 import com.murano500k.coldwallet.viewmodel.AssetListViewModel
 
@@ -59,7 +62,7 @@ companion object{
                     try {
                         val newAmountNum = newAmount.toFloat()
                         current.amount = newAmountNum
-                        Log.w(TAG, "2 viewModel.updateAsset(${current.amount})");
+                        Log.w(TAG, "2 viewModel.updateAsset(${current.amount})")
                         viewModel.updateAsset(current)
                         return@OnFocusChangeListener
                     } catch (e: NumberFormatException) {

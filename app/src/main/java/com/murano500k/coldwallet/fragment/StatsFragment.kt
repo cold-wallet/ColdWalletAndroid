@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.murano500k.coldwallet.ChildItem
-import com.murano500k.coldwallet.ExpandableHeaderItem
+import com.murano500k.coldwallet.model.ChildItem
+import com.murano500k.coldwallet.model.ExpandableHeaderItem
 import com.murano500k.coldwallet.R
-import com.murano500k.coldwallet.StatsItem
+import com.murano500k.coldwallet.model.StatsItem
 import com.murano500k.coldwallet.net.utils.Status
 import com.murano500k.coldwallet.viewmodel.StatsViewModel
 import com.xwray.groupie.ExpandableGroup
@@ -46,9 +46,6 @@ class StatsFragment : Fragment() {
         ExpandableHeaderItem("Drake")
 
     )
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

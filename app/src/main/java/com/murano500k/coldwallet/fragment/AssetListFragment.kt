@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.murano500k.coldwallet.AssetListAdapter
+import com.murano500k.coldwallet.model.AssetListAdapter
 import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
+import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
 import com.murano500k.coldwallet.viewmodel.AssetListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,16 +25,8 @@ import kotlinx.android.synthetic.main.fragment_asset_list.*
 @FragmentScoped
 class AssetListFragment : Fragment(), AssetListAdapter.OnEditListener {
 
-    companion object{
-        const val TAG = "AssetListFragment"
-    }
-
     private val viewModel: AssetListViewModel by viewModels()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,7 +85,7 @@ class AssetListFragment : Fragment(), AssetListAdapter.OnEditListener {
     }
 
     fun showSelectAssetTypeDialog(){
-        Log.w(TAG, "showSelectAssetTypeDialog: " );
+        Log.w(TAG, "showSelectAssetTypeDialog: " )
         val builder = AlertDialog.Builder(context)
         builder.setMessage(R.string.select_asset_type)
             .setCancelable(true)

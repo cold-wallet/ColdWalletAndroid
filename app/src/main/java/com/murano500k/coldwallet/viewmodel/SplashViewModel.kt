@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.murano500k.coldwallet.net.utils.Resource
-import com.murano500k.coldwallet.repo.Repository
+import com.murano500k.coldwallet.components.Repository
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

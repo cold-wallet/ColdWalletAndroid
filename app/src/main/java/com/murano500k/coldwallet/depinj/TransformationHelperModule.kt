@@ -1,8 +1,8 @@
 package com.murano500k.coldwallet.depinj
 
 import android.content.Context
-import com.murano500k.coldwallet.repo.Repository
-import com.murano500k.coldwallet.transofm.TransormationHelper
+import com.murano500k.coldwallet.components.Repository
+import com.murano500k.coldwallet.components.TransormationHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

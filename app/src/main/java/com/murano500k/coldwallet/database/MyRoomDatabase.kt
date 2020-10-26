@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
     CryptoPricePair::class,
     FiatPricePair::class
 ), version = 5, exportSchema = false)
-public abstract class MyRoomDatabase : RoomDatabase() {
+abstract class MyRoomDatabase : RoomDatabase() {
 
     abstract fun assetDao(): AssetDao
 

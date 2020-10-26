@@ -7,4 +7,11 @@ import androidx.annotation.LayoutRes
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+
+
 }
+val Any.TAG: String
+    get() {
+        val tag = javaClass.simpleName
+        return if (tag.length <= 23) tag else tag.substring(0, 23)
+    }

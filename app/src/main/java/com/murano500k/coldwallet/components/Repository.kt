@@ -1,7 +1,8 @@
-package com.murano500k.coldwallet.repo
+package com.murano500k.coldwallet.components
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.murano500k.coldwallet.database.*
@@ -25,8 +26,33 @@ class Repository @Inject constructor(
 ) {
     companion object {
         const val TAG = "Repository"
-        const val ERROR_FLOAT = -1.0f
+        const val TWENTY_FOUR_HOURS = 86400000L
+        const val NO_DATA = 0L
+        const val TIMESTAMP_BINANCE = "TIMESTAMP_BINANCE"
+        const val TIMESTAMP_MONO = "TIMESTAMP_MONO"
     }
+
+    var timestampBinance: Long
+        get() = sharedPreferences.getLong(TIMESTAMP_BINANCE, NO_DATA)
+        set(t) = sharedPreferences.edit().putLong(TIMESTAMP_BINANCE, t).apply()
+
+    var timestampMono: Long
+        get() = sharedPreferences.getLong(TIMESTAMP_BINANCE, NO_DATA)
+        set(t) = sharedPreferences.edit().putLong(TIMESTAMP_BINANCE, t).apply()
+
+    private fun getTimeSinceLastUpdate(timestamp: Long): Long {
+        if(timestamp == NO_DATA) return NO_DATA
+        else return System.currentTimeMillis()- timestamp
+    }
+
+    private fun isDataStale(timestamp: Long): Boolean {
+        return getTimeSinceLastUpdate(timestamp) > TWENTY_FOUR_HOURS
+    }
+
+    private fun isDataEmpty(timestamp: Long): Boolean {
+        return getTimeSinceLastUpdate(timestamp) == NO_DATA
+    }
+
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     val allAssets: LiveData<List<Asset>> = assetDao.getLiveAssets()
@@ -66,19 +92,17 @@ class Repository @Inject constructor(
 
     suspend fun fetchCryptoCodes() {
         try {
-            if(cryptoCodeDao.getCryptoCodes().isEmpty()){
+            if(isNetworkAvailable()){
                 val exchangeInfo = apiServiceBinance.getExchangeInfo()
-                Log.w(TAG, "fetchCryptoCodes from network  "+exchangeInfo.timezone);
+                Log.w(TAG, "fetchCryptoCodes from network  "+exchangeInfo.timezone)
                 val listCodes = parseCryptoCodes(exchangeInfo)
                 cryptoCodeDao.insertAll(listCodes.map{string ->
                     CryptoCode(string)
                 })
-            }else{
-                Log.w(TAG, "fetchCryptoCodes from db ");
             }
         }catch (e:Exception) {
             e.printStackTrace()
-            Log.e(TAG, "fetchCryptoCodes from network error", e);
+            Log.e(TAG, "fetchCryptoCodes from network error", e)
         }
     }
 
@@ -98,14 +122,15 @@ class Repository @Inject constructor(
 
     suspend fun fetchCryptoPricePairs(){
         try {
-            if(getCryptoPricePairs().isEmpty()){
-                Log.w(TAG, "fetchCryptoPricePairs from network ");
+            if(isNetworkAvailable() && (isDataStale(timestampBinance) || isDataEmpty(timestampBinance))){
+                Log.w(TAG, "fetchCryptoPricePairs from network ")
 
                 val prices = apiServiceBinance.getAllPrices()
+                timestampBinance = System.currentTimeMillis() * 1000L
                 cryptoPricePairDao.insertAll(prices.map { priceItem -> CryptoPricePair(priceItem.symbol, priceItem.price) })
-                Log.w(TAG, "fetchCryptoPricePairs from network ok");
-            }else{
-                Log.w(TAG, "fetchCryptoPricePairs from db ");
+                Log.w(TAG, "fetchCryptoPricePairs from network ok")
+            }else if(isDataEmpty(timestampBinance)){
+                Log.w(TAG, "fetchCryptoPricePairs from db ")
                 /*getCryptoPricePairs().forEach {
                     Log.w(TAG, "fetchCryptoPricePairs ${it.symbol} ${it.price}")
                 }*/
@@ -120,20 +145,21 @@ class Repository @Inject constructor(
 
     suspend fun fetchFiatPricePairs(){
         try {
-            if(getFiatPricePairs().isEmpty()){
-                Log.w(TAG, "fetchFiatPricePairs from network");
+            if(isNetworkAvailable() && (isDataStale(timestampMono) || isDataEmpty(timestampMono))){
+                Log.w(TAG, "fetchFiatPricePairs from network")
                 val prices = apiServiceMono.getFiatExchangePrices()
+                timestampMono = System.currentTimeMillis() * 1000L
                 insertFiatPricesToDb(prices)
-                Log.w(TAG, "fetchFiatPricePairs from network ok");
+                Log.w(TAG, "fetchFiatPricePairs from network ok")
             }else{
-                Log.w(TAG, "fetchFiatPricePairs from db ");
+                Log.w(TAG, "fetchFiatPricePairs from db ")
                 /*getFiatPricePairs().forEach {
                     Log.w(TAG, "fetchCryptoPricePairs ${it.currencyCodeA} ${it.currencyCodeB} ${it.rateCross}")
                 }*/
             }
         }catch (e:Exception) {
             e.printStackTrace()
-            Log.e(TAG, "fetchFiatPricePairs from network error", e);
+            Log.e(TAG, "fetchFiatPricePairs from network error", e)
             insertFiatPricesToDb(fiatCodesParser.listFiatExchangeInfo)
         }
     }
@@ -162,7 +188,7 @@ class Repository @Inject constructor(
             }
         }
         if(listDb.size > 0){
-            Log.w(TAG, "insertFiatPricesToDb ok size=${listDb.size} ");
+            Log.w(TAG, "insertFiatPricesToDb ok size=${listDb.size} ")
             fiatPricePairDao.insertAll(listDb)
         }
     }
@@ -170,5 +196,10 @@ class Repository @Inject constructor(
         return (rateBuy + rateSell) / 2
     }
 
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+        return (activeNetworkInfo != null && activeNetworkInfo.isConnected)
+    }
 
 }

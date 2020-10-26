@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.depinj
+package com.murano500k.coldwallet.depinj
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.murano500k.coldwallet.net.api.ApiServiceBinance

@@ -19,9 +19,9 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
-import com.murano500k.coldwallet.ConvertedAsset
+import com.murano500k.coldwallet.model.ConvertedAsset
 import com.murano500k.coldwallet.R
-import com.murano500k.coldwallet.activity.RatesActivity
+import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.net.utils.Status
 import com.murano500k.coldwallet.viewmodel.RatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,12 +32,8 @@ import kotlinx.android.synthetic.main.fragment_pie_chart.*
 @ActivityScoped
 class PieChartFragment : Fragment(), OnChartValueSelectedListener {
 
+
     private val ratesViewModel: RatesViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +77,7 @@ class PieChartFragment : Fragment(), OnChartValueSelectedListener {
                 val label =
                     "${convertedAsset.baseAsset.currency} " +
                             "${convertedAsset.baseAsset.amount}"
-                Log.w(RatesActivity.TAG, label )
+                Log.w(TAG, label )
                 pieValues.add(
                     PieEntry(
                         convertedAsset.convertedAmount.toFloat(),
@@ -97,7 +93,7 @@ class PieChartFragment : Fragment(), OnChartValueSelectedListener {
 
     private fun initChart(pieValues: List<PieEntry>){
         pieChart.setUsePercentValues(true)
-        Log.w(RatesActivity.TAG, "pieData: ${pieValues.size}" );
+        Log.w(TAG, "pieData: ${pieValues.size}" )
         val dataSet = PieDataSet(pieValues, "")
         dataSet.isHighlightEnabled = true
         val data = PieData(dataSet)
@@ -107,7 +103,7 @@ class PieChartFragment : Fragment(), OnChartValueSelectedListener {
         data.setValueFormatter(object : ValueFormatter(){
             override fun getFormattedValue(value: Float): String? {
 
-                return "${value.roundTo(2).toString()}%"
+                return "${value.roundTo(2)}%"
             }
         })
         pieChart.data = data
@@ -134,11 +130,11 @@ class PieChartFragment : Fragment(), OnChartValueSelectedListener {
     }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {
-        Log.w(RatesActivity.TAG, "onValueSelected: ${e.toString()}" );
+        Log.w(TAG, "onValueSelected: ${e.toString()}" )
     }
 
     override fun onNothingSelected() {
-        Log.w(RatesActivity.TAG, "onNothingSelected" );
+        Log.w(TAG, "onNothingSelected" )
     }
 
     fun Float.roundTo(n : Int) : Float {

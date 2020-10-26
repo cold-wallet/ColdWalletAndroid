@@ -1,4 +1,4 @@
-package com.nicoqueijo.android.currencyconverter.kotlin.depinj
+package com.murano500k.coldwallet.depinj
 
 import android.content.Context
 import com.murano500k.coldwallet.database.*

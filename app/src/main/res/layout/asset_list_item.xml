@@ -20,7 +20,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/btc" />
+            app:srcCompat="@drawable/btc"
+            android:contentDescription="@string/iscrypto" />
 
         <TextView
             android:id="@+id/textDescription"
@@ -37,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="USD"
+            android:text="@string/usd"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintStart_toEndOf="@+id/imageCurrencyType"
             app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="USD amount"
+            android:text="@string/usd_amount"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintBottom_toBottomOf="@+id/textCurrency"
             app:layout_constraintStart_toEndOf="@+id/textCurrency"
@@ -58,14 +59,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-
             android:inputType="numberDecimal"
-
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/buttonRemove"
             app:layout_constraintStart_toEndOf="@+id/imageCurrencyType"
-            app:layout_constraintTop_toBottomOf="@+id/textCurrency" />
+            app:layout_constraintTop_toBottomOf="@+id/textCurrency"
+            android:autofillHints="1000.0"
+            tools:ignore="LabelFor" />
 
         <ImageButton
             android:id="@+id/buttonRemove"
@@ -77,7 +77,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="@string/remove" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
