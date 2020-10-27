@@ -32,17 +32,17 @@ class Repository @Inject constructor(
         const val TIMESTAMP_MONO = "TIMESTAMP_MONO"
     }
 
-    var timestampBinance: Long
+    private var timestampBinance: Long
         get() = sharedPreferences.getLong(TIMESTAMP_BINANCE, NO_DATA)
         set(t) = sharedPreferences.edit().putLong(TIMESTAMP_BINANCE, t).apply()
 
-    var timestampMono: Long
-        get() = sharedPreferences.getLong(TIMESTAMP_BINANCE, NO_DATA)
-        set(t) = sharedPreferences.edit().putLong(TIMESTAMP_BINANCE, t).apply()
+    private var timestampMono: Long
+        get() = sharedPreferences.getLong(TIMESTAMP_MONO, NO_DATA)
+        set(t) = sharedPreferences.edit().putLong(TIMESTAMP_MONO, t).apply()
 
     private fun getTimeSinceLastUpdate(timestamp: Long): Long {
         if(timestamp == NO_DATA) return NO_DATA
-        else return System.currentTimeMillis()- timestamp
+        else return System.currentTimeMillis() - timestamp
     }
 
     private fun isDataStale(timestamp: Long): Boolean {
@@ -78,16 +78,12 @@ class Repository @Inject constructor(
     suspend fun getFiatPricePairs() = fiatPricePairDao.getFiatPricePairs()
 
 
-    private val fiatCodesParser: FiatCodesParser
-
-    init {
-        fiatCodesParser = FiatCodesParser(context)
-    }
+    private val fiatCodesParser: FiatCodesParser = FiatCodesParser(context)
 
     suspend fun initData(){
         fetchCryptoCodes()
-        fetchCryptoPricePairs()
         fetchFiatPricePairs()
+        fetchCryptoPricePairs()
     }
 
     suspend fun fetchCryptoCodes() {
@@ -120,7 +116,11 @@ class Repository @Inject constructor(
         return listCurrencyCodes
     }
 
-    suspend fun fetchCryptoPricePairs(){
+    private suspend fun fetchCryptoPricePairs(){
+
+        Log.w(TAG, "fetchCryptoPricePairs isNetworkAvailable=${isNetworkAvailable()}" +
+                " stale=${isDataStale(timestampBinance)} empty=${isDataEmpty(timestampBinance)} timestampBinance=$timestampBinance")
+
         try {
             if(isNetworkAvailable() && (isDataStale(timestampBinance) || isDataEmpty(timestampBinance))){
                 Log.w(TAG, "fetchCryptoPricePairs from network ")
@@ -129,11 +129,6 @@ class Repository @Inject constructor(
                 timestampBinance = System.currentTimeMillis() * 1000L
                 cryptoPricePairDao.insertAll(prices.map { priceItem -> CryptoPricePair(priceItem.symbol, priceItem.price) })
                 Log.w(TAG, "fetchCryptoPricePairs from network ok")
-            }else if(isDataEmpty(timestampBinance)){
-                Log.w(TAG, "fetchCryptoPricePairs from db ")
-                /*getCryptoPricePairs().forEach {
-                    Log.w(TAG, "fetchCryptoPricePairs ${it.symbol} ${it.price}")
-                }*/
             }
         }catch (e:Exception) {
             e.printStackTrace()
@@ -143,7 +138,10 @@ class Repository @Inject constructor(
 
 
 
-    suspend fun fetchFiatPricePairs(){
+    private suspend fun fetchFiatPricePairs(){
+        Log.w(TAG, "fetchFiatPricePairs isNetworkAvailable=${isNetworkAvailable()} " +
+                "stale=${isDataStale(timestampMono)} empty=${isDataEmpty(timestampMono)} timestampMono=$timestampMono")
+
         try {
             if(isNetworkAvailable() && (isDataStale(timestampMono) || isDataEmpty(timestampMono))){
                 Log.w(TAG, "fetchFiatPricePairs from network")

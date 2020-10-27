@@ -5,12 +5,11 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.murano500k.coldwallet.CURRENCY_TYPE
+import com.murano500k.coldwallet.components.Repository
+import com.murano500k.coldwallet.components.TransormationHelper
 import com.murano500k.coldwallet.model.StatsItem
 import com.murano500k.coldwallet.model.StatsRow
 import com.murano500k.coldwallet.net.utils.Resource
-import com.murano500k.coldwallet.components.Repository
-import com.murano500k.coldwallet.components.TransormationHelper
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -32,24 +31,22 @@ class StatsViewModel @ViewModelInject constructor(
         val resultList = ArrayList<StatsItem>()
         repository.getAllAssets().forEach {baseAsset ->
             val requestedCurrencyCode = baseAsset.currency
-            val requestedIsCrypto = (baseAsset.type == CURRENCY_TYPE.CRYPTO.ordinal)
             var total = BigDecimal.ZERO
             val childList = ArrayList<StatsRow>()
             repository.getAllAssets().forEach { asset ->
                 run {
                     if (!asset.currency.equals(requestedCurrencyCode)) {
-                        val assetIsCrypto = (asset.type == CURRENCY_TYPE.CRYPTO.ordinal)
                         val amountInCurrency = transformationHelper.getAmountInOtherCurrency(
                             BigDecimal(asset.amount.toString()),
                             asset.currency,
-                            assetIsCrypto,
+                            asset.isCrypto,
                             requestedCurrencyCode,
-                            requestedIsCrypto
+                            baseAsset.isCrypto
                         )
                         total += amountInCurrency
                         childList.add(
                             StatsRow(
-                                assetIsCrypto,
+                                asset.isCrypto,
                                 createRowText(
                                     asset.amount,
                                     asset.currency,

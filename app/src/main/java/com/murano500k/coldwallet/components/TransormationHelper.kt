@@ -72,6 +72,8 @@ class TransormationHelper @Inject constructor(
                 Log.w(TAG, "getCryptoRate: symbolReverse=$symbolReverse iresult= ${result}" )
                 return BigDecimal(result)
             }
+            Log.w(TAG, "getCryptoRate: TEST" )
+
         }
         return BigDecimal.ZERO
     }
@@ -86,6 +88,9 @@ class TransormationHelper @Inject constructor(
     }
 
     private suspend fun getFiatRateToUAH(rate: String): BigDecimal {
+        Log.w(TAG, "getCryptoRate: getFiatPricePairs size="+repository.getFiatPricePairs().size )
+        Log.w(TAG, "getCryptoRate: getCryptoPricePairs size="+repository.getCryptoPricePairs().size )
+
         if(CODE_UAH.equals(rate)) return BigDecimal.ONE
         if(CODE_EUR.equals(rate)){
             repository.getFiatPricePairs().forEach {
@@ -100,6 +105,7 @@ class TransormationHelper @Inject constructor(
                 }
             }
         }
+
         return BigDecimal.ZERO
     }
 

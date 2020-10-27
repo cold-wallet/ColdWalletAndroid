@@ -11,11 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.murano500k.coldwallet.model.AssetListAdapter
-import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
+import com.murano500k.coldwallet.model.AssetListAdapter
 import com.murano500k.coldwallet.viewmodel.AssetListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.FragmentScoped
@@ -64,7 +63,7 @@ class AssetListFragment : Fragment(), AssetListAdapter.OnEditListener {
     override fun onEditClicked(asset: Asset) {
         var bundle = bundleOf(
             "arg_asset" to asset,
-            "arg_is_crypto" to (asset.type == CURRENCY_TYPE.CRYPTO.ordinal)
+            "arg_is_crypto" to asset.isCrypto
         )
         findNavController().navigate(R.id.action_assetListFragment_to_newAssetFragment, bundle)
     }

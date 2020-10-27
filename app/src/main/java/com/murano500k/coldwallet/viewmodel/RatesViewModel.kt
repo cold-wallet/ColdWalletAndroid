@@ -5,11 +5,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.murano500k.coldwallet.CURRENCY_TYPE
-import com.murano500k.coldwallet.model.ConvertedAsset
-import com.murano500k.coldwallet.net.utils.Resource
 import com.murano500k.coldwallet.components.Repository
 import com.murano500k.coldwallet.components.TransormationHelper
+import com.murano500k.coldwallet.model.ConvertedAsset
+import com.murano500k.coldwallet.net.utils.Resource
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -32,7 +31,7 @@ class RatesViewModel @ViewModelInject constructor(
                     val amountInCurrency = transformationHelper.getAmountInOtherCurrency(
                         BigDecimal(asset.amount.toString()),
                         asset.currency,
-                        (asset.type == CURRENCY_TYPE.CRYPTO.ordinal),
+                        asset.isCrypto,
                         requestedCurrencyCode,
                         isCrypto
                     )

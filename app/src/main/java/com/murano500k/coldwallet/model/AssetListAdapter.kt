@@ -11,7 +11,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
@@ -74,7 +73,7 @@ companion object{
             }
         })
 
-        if(current.type == CURRENCY_TYPE.CRYPTO.ordinal) {
+        if(current.isCrypto) {
             holder.imageType.setImageResource(R.drawable.ic_crypto)
         }else {
             holder.imageType.setImageResource(R.drawable.ic_dollar)

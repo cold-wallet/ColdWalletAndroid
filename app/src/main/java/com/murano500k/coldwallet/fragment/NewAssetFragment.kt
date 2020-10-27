@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.murano500k.coldwallet.CURRENCY_TYPE
 import com.murano500k.coldwallet.R
 import com.murano500k.coldwallet.TAG
 import com.murano500k.coldwallet.database.Asset
@@ -103,19 +102,13 @@ class NewAssetFragment : Fragment() {
     }
 
     private fun parseAsset(): Asset {
-        val type: Int
-        if(isCrypto) {
-            type = CURRENCY_TYPE.CRYPTO.ordinal
-        } else {
-            type = CURRENCY_TYPE.FIAT.ordinal
-        }
         val amount = edit_amount.text.toString().toFloat()
         val currency = spinnerCurrencies.selectedItem.toString()
         //val currency = edit_currency.text.toString()
         val name = edit_name.text.toString()
         val description = edit_description.text.toString()
 
-        return Asset(0, type, amount, currency, name, description)
+        return Asset(0, isCrypto, amount, currency, name, description)
     }
 
 

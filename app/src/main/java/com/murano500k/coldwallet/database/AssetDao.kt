@@ -6,10 +6,10 @@ import androidx.room.*
 @Dao
 interface AssetDao {
 
-    @Query("SELECT * from asset_table ORDER BY type,currency ASC")
+    @Query("SELECT * from asset_table ORDER BY iscrypto,currency ASC")
     fun getLiveAssets(): LiveData<List<Asset>>
 
-    @Query("SELECT * from asset_table ORDER BY type,currency ASC")
+    @Query("SELECT * from asset_table ORDER BY iscrypto,currency ASC")
     suspend fun getAssets(): List<Asset>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
